@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>STEM Club of Aroma</title>
+  <link rel="icon" type="image/png" href="images/logos/stemnew.png" />
+  <link rel="shortcut icon" type="image/png" href="images/logos/stemnew.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,700;0,9..144,900;1,9..144,700&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://css.hackclub.com/theme.css" />
+  <style>
+    html { scroll-behavior: smooth; }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { background:#1a0f14; color:#fff; font-family:'Roboto',system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif; min-height:100vh; }
+
+    /* Only constrain non-positioned images */
+    img:not([style*="position"]) { max-width:100%; display:block; }
+
+    /* Fraunces on all headings */
+    h1, h2, h3, h4, h5, h6,
+    .hero h1, .section-title, .event-name, .poster-name, .strip-item h3 {
+      font-family: 'Fraunces', Georgia, serif;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: sticky; top: 0; z-index: 100;
+      display:flex; align-items:center;
+      padding:10px 24px;
+      background:rgba(20,10,14,0.95);
+      backdrop-filter:blur(12px);
+      -webkit-backdrop-filter:blur(12px);
+      border-bottom:1px solid rgba(255,255,255,0.07);
+    }
+    .nav-logo { display:flex; align-items:center; gap:10px; text-decoration:none; flex-shrink:0; }
+    .nav-logo img { height:56px; display:block; }
+    .nav-title { font-weight:700; font-size:15px; color:#fff; line-height:1.2; }
+    .nav-title small { display:block; font-size:11px; font-weight:400; color:#9b8fa0; text-transform:uppercase; letter-spacing:.1em; }
+    .nav-links { margin-left:auto; display:flex; align-items:center; gap:2px; list-style:none; flex-shrink:0; }
+    .nav-links a { color:#c8bdd0; text-decoration:none; font-size:14px; font-weight:700; padding:7px 14px; border-radius:8px; text-transform:uppercase; letter-spacing:.08em; transition:color .15s, background .15s; }
+    .nav-links a:hover,
+    .nav-links a.active { color:#fff; background:rgba(255,255,255,.1); text-decoration:none; }
+    .nav-join {
+      margin-left:10px;
+      background:#fff !important;
+      color:#1a0f14 !important;
+      padding:8px 18px !important;
+      border-radius:99px !important;
+      font-size:13px !important;
+      font-weight:700 !important;
+      white-space:nowrap;
+      transition:background .15s !important;
+    }
+    .nav-join:hover { background:#f0e6ef !important; color:#1a0f14 !important; text-decoration:none !important; }
+
+    /* ── HERO ── */
+    .hero {
+      position:relative; overflow:hidden;
+      background:#2a0c17;
+      min-height:520px;
+      display:flex; align-items:center; justify-content:center;
+    }
+
+    /* illustration collage background — three images tiled side by side */
+    .hero-bg {
+      position:absolute; inset:0;
+      display:grid;
+      grid-template-columns:1fr 1fr 1fr;
+    }
+    .hero-bg-img {
+      width:100%; height:100%;
+      object-fit:cover;
+      object-position:center;
+      display:block;
+      /* red-tint blend so illustrations feel unified with the hero colour */
+      mix-blend-mode:luminosity;
+      opacity:0.28;
+      filter:sepia(1) saturate(4) hue-rotate(300deg) brightness(0.55);
+    }
+
+    /* red radial glow */
+    .hero-glow {
+      position:absolute; inset:0;
+      background:radial-gradient(ellipse 80% 75% at 50% 55%, rgba(160,15,50,.65) 0%, rgba(42,12,23,.85) 70%, #2a0c17 100%);
+      pointer-events:none;
+    }
+
+    /* wave bottom */
+    .hero-wave {
+      position:absolute; bottom:-2px; left:0; right:0;
+      line-height:0; pointer-events:none;
+    }
+    .hero-wave svg { width:100%; display:block; }
+
+    /* ── SCATTERED PHOTOS ── */
+    .photos-left, .photos-right {
+      position:absolute; top:0; bottom:0;
+      width:200px;
+      display:flex; flex-direction:column;
+      justify-content:center;
+      gap:12px;
+      padding:24px 14px;
+      z-index:1;
+    }
+    .photos-left  { left:0; }
+    .photos-right { right:0; }
+
+    .photo-card {
+      background:#2e1a22;
+      border:2px solid rgba(255,255,255,0.13);
+      border-radius:8px;
+      overflow:hidden;
+      box-shadow:0 6px 24px rgba(0,0,0,.55);
+      flex-shrink:0;
+    }
+
+    /* unique tilt per card */
+    .photos-left  .photo-card:nth-child(1) { transform:rotate(-3deg); }
+    .photos-left  .photo-card:nth-child(2) { transform:rotate(2.5deg) translateX(10px); }
+    .photos-left  .photo-card:nth-child(3) { transform:rotate(-1.5deg) translateX(-6px); }
+    .photos-right .photo-card:nth-child(1) { transform:rotate(3deg); }
+    .photos-right .photo-card:nth-child(2) { transform:rotate(-2.5deg) translateX(-10px); }
+    .photos-right .photo-card:nth-child(3) { transform:rotate(1.5deg) translateX(6px); }
+
+    .photo-card .photo-inner {
+      width:100%;
+      height:130px;
+      background:linear-gradient(135deg,#3d1828 0%,#1e0f18 100%);
+      position:relative;
+      overflow:hidden;
+    }
+    .photo-card .photo-inner img {
+      position:absolute;
+      top:0; left:0;
+      width:100%; height:100%;
+      object-fit:cover;
+      object-position:center top;
+      display:block;
+    }
+
+    /* ── HERO CONTENT ── */
+    .hero-content {
+      position:relative; z-index:2;
+      text-align:center;
+      /* clamp so it never overlaps the photo columns */
+      padding:60px clamp(40px, 20vw, 240px);
+      max-width:1200px;
+      width:100%;
+    }
+    .hero-announce {
+      display:inline-flex; align-items:center; gap:8px;
+      font-size:14px; color:#e0d0d8; margin-bottom:24px;
+      cursor:default; flex-wrap:wrap; justify-content:center;
+    }
+    .hero-announce .dot   { color:#f1c40f; }
+    .hero-announce .arrow { color:#ec3750; font-weight:700; }
+
+    .hero h1 {
+      font-size:clamp(36px,7vw,80px);
+      font-weight:700;
+      line-height:1.05;
+      letter-spacing:-.025em;
+      color:#fff;
+      margin-bottom:20px;
+    }
+    .hero h1 .c-red    { color:#ec3750; }
+    .hero h1 .c-orange { color:#ff8c37; }
+    .hero h1 .c-green  { color:#33d6a6; }
+    .hero h1 .c-cyan   { color:#5bc0de; }
+
+    .hero-sub {
+      font-size:17px;
+      color:#c8bdd0;
+      max-width:460px;
+      margin:0 auto 28px;
+      line-height:1.65;
+    }
+
+    /* collab tagline */
+    .hero-collab {
+      font-family:'Fraunces', Georgia, serif;
+      font-size:13px;
+      color:rgba(255,255,255,.45);
+      letter-spacing:.06em;
+      text-transform:uppercase;
+      margin-bottom:24px;
+    }
+
+    .hero-cta {
+      display:inline-flex; align-items:center; gap:8px;
+      color:#ec3750;
+      font-size:18px;
+      font-weight:700;
+      text-decoration:none;
+      letter-spacing:.01em;
+      border-bottom:2px solid rgba(236,55,80,.4);
+      padding-bottom:2px;
+      transition:color .15s, border-color .15s;
+    }
+    .hero-cta:hover { color:#ff8c37; border-color:#ff8c37; text-decoration:none; }
+    .hero-cta svg { flex-shrink:0; }
+
+    /* ── ABOUT STRIP ── */
+    .strip { background:#110b0e; border-top:1px solid #2a1a22; border-bottom:1px solid #2a1a22; }
+    .strip-inner {
+      max-width:1100px; margin:auto;
+      padding:40px 32px;
+      display:grid; grid-template-columns:repeat(3,1fr); gap:32px;
+    }
+    .strip-item { display:flex; flex-direction:column; gap:6px; }
+    .strip-num { font-size:32px; font-weight:700; color:#ec3750; line-height:1; }
+    .strip-item h3 { font-size:16px; font-weight:700; color:#fff; }
+    .strip-item p  { font-size:14px; color:#9b8fa0; line-height:1.6; }
+
+    /* ── EVENTS ── */
+    .events-section { max-width:1100px; margin:auto; padding:64px 32px; }
+    .section-label { font-size:12px; font-weight:700; text-transform:uppercase; letter-spacing:.12em; color:#ec3750; margin-bottom:8px; }
+    .section-title { font-size:clamp(24px,4vw,38px); font-weight:700; color:#fff; margin-bottom:40px; line-height:1.1; }
+
+    .event-card {
+      display:grid;
+      grid-template-columns:320px 1fr;
+      max-width:820px;
+      gap:48px;
+      align-items:start;
+    }
+
+    /* POSTER */
+    .poster { border-radius:12px; overflow:hidden; }
+    .poster img { width:100%; height:auto; display:block; border-radius:12px; }
+
+    /* EVENT INFO */
+    .event-info { display:flex; flex-direction:column; gap:16px; }
+    .event-badge {
+      color:#ec3750; font-size:12px; font-weight:700;
+      text-transform:uppercase; letter-spacing:.12em;
+      display:flex; align-items:center; gap:6px;
+    }
+    .event-badge::before { content:''; width:6px; height:6px; background:#ec3750; border-radius:50%; display:inline-block; }
+    .event-name { font-size:clamp(36px,5vw,52px); font-weight:700; line-height:1; letter-spacing:-.02em; color:#fff; }
+    .event-desc { font-size:15px; color:#c8bdd0; line-height:1.7; }
+    .event-meta { display:flex; flex-direction:column; gap:10px; }
+    .meta-row { display:flex; align-items:center; gap:10px; font-size:15px; color:#9b8fa0; }
+    .meta-row svg { flex-shrink:0; opacity:.6; }
+    .meta-row strong { color:#fff; }
+
+    .apply-wrap { margin-top:4px; }
+    .apply-btn {
+      display:inline-flex; align-items:center; gap:8px;
+      background:linear-gradient(135deg,#ff8c37,#ec3750);
+      color:#fff; font-size:16px; font-weight:700;
+      padding:13px 28px; border-radius:99px;
+      text-decoration:none;
+      box-shadow:0 4px 24px rgba(236,55,80,.35);
+      transition:box-shadow .2s;
+    }
+    .apply-btn:hover { box-shadow:0 6px 32px rgba(236,55,80,.6); text-decoration:none; color:#fff; }
+
+
+
+    /* ── RESPONSIVE ── */
+
+    /* Large tablets: shrink photo columns */
+    @media (max-width: 1100px) {
+      .photos-left, .photos-right { width:180px; }
+    }
+
+    /* Tablet: shrink photo columns */
+    @media (max-width: 900px) {
+      .photos-left, .photos-right { width:110px; gap:8px; padding:16px 8px; }
+      .photo-card .photo-inner { height:80px; }
+      .photo-card { border-width:1px; }
+      .hero-content { padding:56px 125px; }
+      nav { padding:10px 20px; }
+      .nav-title { font-size:13px; }
+      .strip-inner { gap:20px; }
+      .events-section { padding:48px 24px; }
+      .event-card { grid-template-columns:260px 1fr; gap:32px; }
+    }
+
+    /* Mobile */
+    @media (max-width: 640px) {
+      nav { padding:10px 16px; }
+      .nav-logo img { height:44px; }
+      .nav-title small { display:none; }
+      .nav-links a { font-size:12px; padding:6px 10px; }
+      .nav-join { padding:7px 14px !important; font-size:12px !important; margin-left:6px; }
+
+      .hero { min-height:auto; }
+
+      /* tiny photo columns on mobile */
+      .photos-left, .photos-right {
+        width:72px;
+        gap:6px;
+        padding:12px 5px;
+        justify-content:center;
+      }
+      .photo-card .photo-inner { height:60px; }
+      .photo-card { border-radius:5px; border-width:1px; }
+      /* reduce tilt on small screens so cards don't clip */
+      .photos-left  .photo-card:nth-child(1) { transform:rotate(-2deg); }
+      .photos-left  .photo-card:nth-child(2) { transform:rotate(1.5deg) translateX(4px); }
+      .photos-left  .photo-card:nth-child(3) { transform:rotate(-1deg) translateX(-3px); }
+      .photos-right .photo-card:nth-child(1) { transform:rotate(2deg); }
+      .photos-right .photo-card:nth-child(2) { transform:rotate(-1.5deg) translateX(-4px); }
+      .photos-right .photo-card:nth-child(3) { transform:rotate(1deg) translateX(3px); }
+
+      .hero-content { padding:36px 82px 56px; }
+      .hero-announce { font-size:11px; margin-bottom:14px; }
+      .hero h1 { font-size:clamp(24px,7vw,40px); margin-bottom:14px; }
+      .hero-sub { font-size:13px; margin-bottom:18px; }
+      .hero-cta { font-size:14px; }
+      .hero-collab { font-size:10px; }
+
+      .strip-inner { grid-template-columns:1fr; padding:28px 20px; gap:20px; }
+      .strip-num { font-size:26px; }
+
+      .events-section { padding:36px 20px 48px; }
+      .section-title { margin-bottom:28px; }
+
+      .event-card { grid-template-columns:1fr; gap:24px; }
+      .poster { border-radius:10px; }
+
+      .event-name { font-size:36px; }
+      .event-desc { font-size:14px; }
+      .meta-row { font-size:14px; }
+      .apply-btn { width:100%; justify-content:center; font-size:15px; padding:14px 24px; }
+    }
+
+    /* Very small phones */
+    @media (max-width: 380px) {
+      .photos-left, .photos-right { width:58px; padding:10px 4px; gap:5px; }
+      .photo-card .photo-inner { height:50px; }
+      .hero-content { padding:32px 66px 48px; }
+      .hero h1 { font-size:22px; }
+      .nav-title { display:none; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a class="nav-logo" href="#">
+    <img src="https://assets.hackclub.com/flag-orpheus-left.svg" alt="Hack Club flag" />
+    <div class="nav-title">
+      STEM Club of Aroma
+      <small>a Hack Club</small>
+    </div>
+  </a>
+  <ul class="nav-links">
+    <li><a href="#events" class="active">Events</a></li>
+    <li><a class="nav-join" href="#events">Apply</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg">
+    <img class="hero-bg-img" src="images/bg1.jpg" alt="" aria-hidden="true" />
+    <img class="hero-bg-img" src="images/bg2.jpg" alt="" aria-hidden="true" />
+    <img class="hero-bg-img" src="images/bg3.jpg" alt="" aria-hidden="true" />
+  </div>
+  <div class="hero-glow"></div>
+
+  <!-- Left photos -->
+  <div class="photos-left">
+    <div class="photo-card">
+      <div class="photo-inner">
+        <img src="images/photos/1.jpeg" alt="STEM Club members" onerror="this.parentElement.style.background='linear-gradient(135deg,#3d1828,#1e0f18)'; this.remove();" />
+      </div>
+    </div>
+    <div class="photo-card">
+      <div class="photo-inner">
+        <img src="images/photos/2.jpeg" alt="STEM Club members" onerror="this.parentElement.style.background='linear-gradient(135deg,#3d1828,#1e0f18)'; this.remove();" />
+      </div>
+    </div>
+    <div class="photo-card">
+      <div class="photo-inner">
+        <img src="images/photos/3.jpeg" alt="STEM Club members" onerror="this.parentElement.style.background='linear-gradient(135deg,#3d1828,#1e0f18)'; this.remove();" />
+      </div>
+    </div>
+  </div>
+
+  <!-- Right photos -->
+  <div class="photos-right">
+    <div class="photo-card">
+      <div class="photo-inner">
+        <img src="images/photos/4.jpeg" alt="STEM Club members" onerror="this.parentElement.style.background='linear-gradient(135deg,#3d1828,#1e0f18)'; this.remove();" />
+      </div>
+    </div>
+    <div class="photo-card">
+      <div class="photo-inner">
+        <img src="images/photos/5.jpeg" alt="STEM Club members" onerror="this.parentElement.style.background='linear-gradient(135deg,#3d1828,#1e0f18)'; this.remove();" />
+      </div>
+    </div>
+    <div class="photo-card">
+      <div class="photo-inner">
+        <img src="images/photos/6.jpeg" alt="STEM Club members" onerror="this.parentElement.style.background='linear-gradient(135deg,#3d1828,#1e0f18)'; this.remove();" />
+      </div>
+    </div>
+  </div>
+
+  <!-- Main content -->
+  <div class="hero-content">
+    <div class="hero-announce">
+      <span class="dot">&#9733;</span>
+      Our first event is here &mdash; VIBES is coming
+      <span class="arrow">&#8594;</span>
+    </div>
+    <h1>
+      Where students<br>
+      make <span class="c-red">cool</span> <span class="c-orange">stuff</span><span class="c-green">.</span>
+    </h1>
+    <p class="hero-sub">
+      STEM Club of Aroma is a student-run Hack Club chapter dedicated to building, learning, and shipping things together.
+    </p>
+    <p class="hero-collab">Robotics Club of Aroma &times; STEM Club of Aroma</p>
+    <a class="hero-cta" href="#events">
+      See events
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+        <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
+      </svg>
+    </a>
+  </div>
+
+  <!-- Wave -->
+  <div class="hero-wave">
+    <svg viewBox="0 0 1440 60" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+      <path d="M0 60 C360 0 1080 0 1440 60 L1440 60 L0 60Z" fill="#1a0f14"/>
+    </svg>
+  </div>
+</section>
+
+<!-- ABOUT STRIP -->
+<div class="strip">
+  <div class="strip-inner">
+    <div class="strip-item">
+      <div class="strip-num">01</div>
+      <h3>Learn by doing</h3>
+      <p>Hands-on projects and workshops that teach skills you actually use.</p>
+    </div>
+    <div class="strip-item">
+      <div class="strip-num">02</div>
+      <h3>Build together</h3>
+      <p>Collaborate with students who share your curiosity and drive.</p>
+    </div>
+    <div class="strip-item">
+      <div class="strip-num">03</div>
+      <h3>Ship things</h3>
+      <p>Every event is a chance to make something you are proud of.</p>
+    </div>
+  </div>
+</div>
+
+<!-- EVENTS -->
+<main class="events-section" id="events">
+  <p class="section-label">Upcoming Events</p>
+  <h2 class="section-title">What's happening</h2>
+
+  <div class="event-card">
+    <!-- Poster -->
+    <div class="poster">
+      <img src="images/poster vibes.png" alt="VIBES event poster" />
+    </div>
+
+    <!-- Info -->
+    <div class="event-info">
+      <div class="event-badge">Upcoming</div>
+      <h2 class="event-name">VIBES</h2>
+      <p class="event-desc">
+        Our first official event &mdash; a laid-back but exciting gathering where you meet the club, connect with fellow students, and get a feel for what we're building this year.
+      </p>
+      <div class="event-meta">
+        <div class="meta-row">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <rect x="3" y="4" width="18" height="18" rx="2"/>
+            <line x1="16" y1="2" x2="16" y2="6"/>
+            <line x1="8" y1="2" x2="8" y2="6"/>
+            <line x1="3" y1="10" x2="21" y2="10"/>
+          </svg>
+          Date &nbsp;<strong>TBA</strong>
+        </div>
+        <div class="meta-row">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/>
+            <circle cx="12" cy="9" r="2.5"/>
+          </svg>
+          Location &nbsp;<strong>Aroma School</strong>
+        </div>
+        <div class="meta-row">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <circle cx="12" cy="12" r="10"/>
+            <polyline points="12 6 12 12 16 14"/>
+          </svg>
+          Open to &nbsp;<strong>all students</strong>
+        </div>
+      </div>
+      <div class="apply-wrap">
+        <a class="apply-btn" href="https://forms.gle/5yhdLBbXy2hehS2P6" target="_blank" rel="noopener noreferrer">
+          Apply Now
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
+            <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
+          </svg>
+        </a>
+      </div>
+    </div>
+  </div>
+</main>
+
+</body>
+</html>
